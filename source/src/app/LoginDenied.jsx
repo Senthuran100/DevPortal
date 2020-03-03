@@ -73,7 +73,7 @@ function onLogout() {
 }
 
 function onGoToAnonymousView() {
-    if(Settings.app.isPassive || Settings.app.isNonAnonymous){
+    if(Settings.app.isPassive){
         sessionStorage.setItem("notEnoughPermission", "true");
     }
     window.location = Settings.app.context + '/services/auth/callback/logout';
@@ -88,6 +88,7 @@ class LoginDenied extends Component {
         document.body.style.backgroundColor = null;
     }
     render() {
+        console.log(this.props.IsAnonymousModeEnabled);
         return (
             <div style={messageStyles}>
                 <h5 style={headerStyle}>
@@ -105,7 +106,7 @@ class LoginDenied extends Component {
                     />
                 </p>
                 <div>
-                    {Settings.app.isNonAnonymous?(
+                    {this.props.IsAnonymousModeEnabled?(
                         <button onClick={onLogout} style={buttonStyleLogout}>
                             <FormattedMessage
                                 id='LoginDenied.logout'
@@ -120,12 +121,6 @@ class LoginDenied extends Component {
                                 defaultMessage='Go To Public Portal'
                             />
                         </button>
-                         {/* <button onClick={onRetry} style={buttonStyleRetry}>
-                            <FormattedMessage
-                                id='LoginDenied.retry'
-                                defaultMessage='Retry'
-                            />
-                        </button> */}
                         <button onClick={onLogout} style={buttonStyleLogout}>
                             <FormattedMessage
                                 id='LoginDenied.logout'

@@ -257,7 +257,7 @@ class ProtectedApp extends Component {
         const checkSessionURL = 'https://'+ window.location.host + '/oidc/checksession?client_id='
         + clientId + '&redirect_uri=https://' + window.location.host
         + Settings.app.context + '/services/auth/callback/login';
-        const { tenantDomain } = this.context;
+        const { tenantDomain,settings } = this.context;
         if (!userResolved) {
             return <Loading />;
         }
@@ -268,13 +268,12 @@ class ProtectedApp extends Component {
             isAuthenticated = true;
         }
         if (notEnoughPermission) {
-            return <LoginDenied />;
+            return <LoginDenied IsAnonymousModeEnabled={settings.IsAnonymousModeEnabled}/>;
         }
-
-        if(!isAuthenticated && Settings.app.isNonAnonymous && !sessionStorage.getItem('notEnoughPermission')){
+        if(!isAuthenticated && settings.IsAnonymousModeEnabled && !sessionStorage.getItem('notEnoughPermission')){
             return <RedirectToLogin />;
         }
-        if(Settings.app.isNonAnonymous && sessionStorage.getItem('notEnoughPermission')){
+        if(settings.IsAnonymousModeEnabled && sessionStorage.getItem('notEnoughPermission')){
             sessionStorage.removeItem('notEnoughPermission');
         }
 

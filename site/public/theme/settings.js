@@ -10,7 +10,6 @@ const Settings = {
         },
         subscriptionLimit: 1000,
         isPassive:true,
-        isNonAnonymous:false,
     },
     grantTypes: {
         authorization_code: 'Code',

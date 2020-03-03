@@ -51,6 +51,7 @@ class DevPortal extends React.Component {
             theme: null,
             authresponse:false,
             externalidp:false,
+            isNonAnonymous:false,
         };
         this.SetTenantTheme = this.setTenantTheme.bind(this);
         this.setSettings = this.setSettings.bind(this);
@@ -67,7 +68,10 @@ class DevPortal extends React.Component {
                 this.setSettings(response.body);
             })
             .then((response)=>{
-                if (Settings.app.isPassive && !AuthManager.getUser() && !sessionStorage.getItem('notEnoughPermission') && !Settings.app.isNonAnonymous) {
+                if(!this.state.settings.IsAnonymousModeEnabled){
+                    this.setState({isNonAnonymous:true})
+                }
+                if (Settings.app.isPassive && !AuthManager.getUser() && !sessionStorage.getItem('notEnoughPermission') && !this.state.settings.IsAnonymousModeEnabled) {
                     this.checkLoginUser(this.state.settings.identityProvider.external);
                 }
             })
@@ -206,9 +210,9 @@ class DevPortal extends React.Component {
      * @memberof DevPortal
      */
     render() {
-        const { settings, tenantDomain, theme, authresponse,externalidp } = this.state;
+        const { settings, tenantDomain, theme, authresponse, externalidp, isNonAnonymous} = this.state;
         const { app: { context } } = Settings;
-        if (Settings.app.isPassive && !authresponse && !externalidp && !AuthManager.getUser() && !sessionStorage.getItem('notEnoughPermission') && !Settings.app.isNonAnonymous) {
+        if (Settings.app.isPassive && !authresponse && !externalidp && !AuthManager.getUser() && !sessionStorage.getItem('notEnoughPermission') && isNonAnonymous) {
             return <Loading />;
         }
 
